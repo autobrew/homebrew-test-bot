@@ -510,7 +510,7 @@ module Homebrew
                "log", "-1", "--format=%s"
       ).strip
       puts "Homebrew/brew #{brew_version} (#{brew_commit_subject})"
-      if @tap.to_s != "homebrew/core"
+      if @tap.to_s != "autobrew/core"
         core_path = CoreTap.instance.path
         if core_path.exist?
           if ENV["TRAVIS"]
@@ -1341,7 +1341,7 @@ module Homebrew
 
     first_formula_name = bottles_hash.keys.first
     tap_name = first_formula_name.rpartition("/").first.chuzzle
-    tap_name ||= "homebrew/core"
+    tap_name ||= "autobrew/core"
     tap ||= Tap.fetch(tap_name)
 
     ENV["GIT_WORK_TREE"] = tap.path
