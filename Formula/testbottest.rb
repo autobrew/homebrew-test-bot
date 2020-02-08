@@ -1,6 +1,6 @@
 class Testbottest < Formula
   desc "Minimal C program and Makefile used for testing Homebrew"
-  homepage "https://github.com/Homebrew/brew"
+  homepage "https://github.com/autobrew/brew"
   url "file://#{File.expand_path(__dir__)}/tarballs/testbottest-0.1.tbz"
   sha256 "246c4839624d0b97338ce976100d56bd9331d9416e178eb0f74ef050c1dbdaad"
   head "https://github.com/Homebrew/homebrew-test-bot.git"

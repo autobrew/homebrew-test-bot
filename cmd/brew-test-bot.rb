@@ -478,7 +478,7 @@ module Homebrew
         @name = @hash
       # Handle a URL being passed on the command-line or through Jenkins
       # environment variables e.g.
-      # `brew test-bot https://github.com/Homebrew/homebrew-core/pull/678`
+      # `brew test-bot https://github.com/autobrew/homebrew-core/pull/678`
       elsif @url
         unless ARGV.include?("--no-pull")
           diff_start_sha1 = current_sha1
@@ -519,7 +519,7 @@ module Homebrew
           end
         else
           test "git", "clone", "--depth=1",
-               "https://github.com/Homebrew/homebrew-core",
+               "https://github.com/autobrew/homebrew-core",
                core_path.to_s
         end
 
@@ -527,7 +527,7 @@ module Homebrew
           "git", "-C", core_path.to_s,
                  "log", "-1", "--format=%h (%s)"
         ).strip
-        puts "Homebrew/homebrew-core #{core_revision}"
+        puts "autobrew/homebrew-core #{core_revision}"
       end
       if @tap
         tap_origin_master_revision = Utils.popen_read(
@@ -1568,7 +1568,7 @@ module Homebrew
       "git", "-C", Tap.fetch("homebrew/test-bot").path.to_s,
              "log", "-1", "--format=%h (%s)"
     ).strip
-    puts "Homebrew/homebrew-test-bot #{test_bot_revision}"
+    puts "autobrew/homebrew-test-bot #{test_bot_revision}"
     puts "ARGV: #{ARGV.join(" ")}"
 
     return unless ARGV.include?("--local")
