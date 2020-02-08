@@ -343,7 +343,7 @@ module Homebrew
       @steps = []
       @tap = options[:tap]
       @repository = if @tap
-        @test_bot_tap = @tap.to_s == "homebrew/test-bot"
+        @test_bot_tap = @tap.to_s == "autobrew/test-bot"
         @tap.path
       else
         HOMEBREW_REPOSITORY
@@ -1075,7 +1075,7 @@ module Homebrew
 
       Tap.names.each do |tap|
         next if tap == "homebrew/core"
-        next if tap == "homebrew/test-bot"
+        next if tap == "autobrew/test-bot"
         next if tap == "homebrew/cask"
         next if tap == @tap.to_s
         test "brew", "untap", tap
@@ -1151,10 +1151,10 @@ module Homebrew
       if ENV["TRAVIS"]
         if OS.mac?
           # For Travis CI build caching.
-          test "brew", "install", "md5deep", "libyaml", "gmp", "openssl@1.1"
+          # test "brew", "install", "md5deep", "libyaml", "gmp", "openssl@1.1"
         end
 
-        return if @tap && @tap.to_s != "homebrew/test-bot"
+        return if @tap && @tap.to_s != "autobrew/test-bot"
       end
 
       unless @start_branch.to_s.empty?
@@ -1565,7 +1565,7 @@ module Homebrew
     ARGV << "--fast" if ARGV.include?("--ci-master")
 
     test_bot_revision = Utils.popen_read(
-      "git", "-C", Tap.fetch("homebrew/test-bot").path.to_s,
+      "git", "-C", Tap.fetch("autobrew/test-bot").path.to_s,
              "log", "-1", "--format=%h (%s)"
     ).strip
     puts "autobrew/homebrew-test-bot #{test_bot_revision}"
