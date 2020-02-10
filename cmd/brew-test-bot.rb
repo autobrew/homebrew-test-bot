@@ -326,7 +326,7 @@ module Homebrew
       @steps = []
       @tap = tap
       @repository = if @tap
-        @test_bot_tap = @tap.to_s == "homebrew/test-bot"
+        @test_bot_tap = @tap.to_s == "autobrew/test-bot"
         @tap.path
       else
         HOMEBREW_REPOSITORY
@@ -503,8 +503,8 @@ module Homebrew
         "git", "-C", HOMEBREW_REPOSITORY.to_s,
                "log", "-1", "--format=%s"
       ).strip
-      puts "Homebrew/brew #{brew_version} (#{brew_commit_subject})"
-      if @tap.to_s != "homebrew/core"
+      puts "autobrew/brew #{brew_version} (#{brew_commit_subject})"
+      if @tap.to_s != "autobrew/core"
         core_path = CoreTap.instance.path
         if core_path.exist?
           if ENV["HOMEBREW_TRAVIS_CI"]
@@ -513,7 +513,7 @@ module Homebrew
           end
         else
           test "git", "clone", "--depth=1",
-               "https://github.com/Homebrew/homebrew-core",
+               "https://github.com/autobrew/homebrew-core",
                core_path.to_s
         end
 
@@ -521,7 +521,7 @@ module Homebrew
           "git", "-C", core_path.to_s,
                  "log", "-1", "--format=%h (%s)"
         ).strip
-        puts "Homebrew/homebrew-core #{core_revision}"
+        puts "autobrew/homebrew-core #{core_revision}"
       end
       if @tap
         tap_origin_master_revision = Utils.popen_read(
@@ -1091,8 +1091,8 @@ module Homebrew
       prune_if_needed(@repository)
 
       Tap.names.each do |tap|
-        next if tap == "homebrew/core"
-        next if tap == "homebrew/test-bot"
+        next if tap == "autobrew/core"
+        next if tap == "autobrew/test-bot"
         next if tap == @tap.to_s
         test "brew", "untap", tap
       end
@@ -1174,10 +1174,10 @@ module Homebrew
       if ENV["HOMEBREW_TRAVIS_CI"]
         if OS.mac?
           # For Travis CI build caching.
-          test "brew", "install", "md5deep", "libyaml", "gmp", "openssl@1.1"
+          # test "brew", "install", "md5deep", "libyaml", "gmp", "openssl@1.1"
         end
 
-        return if @tap && @tap.to_s != "homebrew/test-bot"
+        return if @tap && @tap.to_s != "autobrew/test-bot"
       end
 
       unless @start_branch.to_s.empty?
@@ -1302,7 +1302,7 @@ module Homebrew
     end
 
     # Ensure that uploading Homebrew bottles on Linux doesn't use Linuxbrew.
-    bintray_org = ARGV.value("bintray-org") || "homebrew"
+    bintray_org = ARGV.value("bintray-org") || "autobrew"
     if bintray_org == "homebrew" && !OS.mac?
       ENV["HOMEBREW_FORCE_HOMEBREW_ORG"] = "1"
     end
@@ -1361,7 +1361,7 @@ module Homebrew
 
     first_formula_name = bottles_hash.keys.first
     tap_name = first_formula_name.rpartition("/").first.chuzzle
-    tap_name ||= "homebrew/core"
+    tap_name ||= "autobrew/core"
     tap ||= Tap.fetch(tap_name)
 
     ENV["GIT_WORK_TREE"] = tap.path
@@ -1602,10 +1602,10 @@ module Homebrew
     ARGV << "--fast" if ARGV.include?("--ci-master")
 
     test_bot_revision = Utils.popen_read(
-      "git", "-C", Tap.fetch("homebrew/test-bot").path.to_s,
+      "git", "-C", Tap.fetch("autobrew/test-bot").path.to_s,
              "log", "-1", "--format=%h (%s)"
     ).strip
-    puts "Homebrew/homebrew-test-bot #{test_bot_revision}"
+    puts "autobrew/homebrew-test-bot #{test_bot_revision}"
     puts "ARGV: #{ARGV.join(" ")}"
 
     return unless ARGV.include?("--local")
