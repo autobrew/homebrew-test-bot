@@ -704,10 +704,10 @@ module Homebrew
       @unchanged_build_dependencies = build_dependencies - @formulae
 
       dependents =
-        Utils.popen_read("brew", "uses", "--recursive", formula_name)
+        Utils.popen_read("brew", "uses", formula_name)
              .split("\n")
       dependents -= @formulae
-      dependents = dependents.map { |d| Formulary.factory(d) }
+      dependents = dependents.uniq.map { |d| Formulary.factory(d) }
 
       @bottled_dependents = dependents.select(&:bottled?)
       @testable_dependents = dependents.select do |d|
@@ -841,7 +841,7 @@ module Homebrew
     def formula(formula_name)
       @category = "#{__method__}.#{formula_name}"
 
-      test "brew", "uses", "--recursive", formula_name
+      test "brew", "uses", formula_name
 
       formula = Formulary.factory(formula_name)
 
