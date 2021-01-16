@@ -887,7 +887,7 @@ module Homebrew
       tap_needed_taps(deps)
       install_gcc_if_needed(formula, deps)
       install_mercurial_if_needed(deps, reqs)
-      setup_formulae_deps_instances(formula, formula_name)
+      setup_formulae_deps_instances(formula, formula_name) if !ARGV.include?("--skip-revdeps")
 
       test "brew", "fetch", "--retry", *fetch_args
       test "brew", "uninstall", "--force", formula_name if formula.installed?
